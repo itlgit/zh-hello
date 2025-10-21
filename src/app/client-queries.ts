@@ -1,5 +1,6 @@
-export async function getGreeting(): Promise<string> {
+import { Greeting } from '@/types/greeting';
+
+export async function getGreeting(): Promise<Greeting> {
   const response = await fetch('/api/greeting');
-  const data = await response.json();
-  return data.greeting;
+  return response.json();
 }

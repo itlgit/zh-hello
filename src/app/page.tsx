@@ -9,8 +9,8 @@ export default function Home() {
 
   function handleSubmit() {
     if (name) {
-      getGreeting().then((greeting) => {
-        setFullGreeting(`${greeting}, ${name}!`);
+      getGreeting().then((greet) => {
+        setFullGreeting(`${greet.greeting}, ${name}!`);
       });
     } else {
       ref.current?.focus();
