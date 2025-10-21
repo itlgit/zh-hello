@@ -2,21 +2,20 @@
 import React from 'react';
 import * as GreetingUtil from '@/app/client-queries';
 import { GreetingDocument } from '@/types/greeting';
-import Link from 'next/link';
 
 function refreshGreetings(onRefresh: (greetings: GreetingDocument[]) => void) {
   GreetingUtil.getGreetings().then(onRefresh);
 }
 function handleAddGreeting(onAdd?: () => void) {
   const newGreeting = prompt('Enter new greeting:');
-  if (typeof newGreeting === 'string') {
+  if (newGreeting) {
     GreetingUtil.addGreeting(newGreeting).then(onAdd);
   }
 }
 
-function handleDeleteGreeting(id: string, onDelete?: () => void) {
-  if (confirm('Are you sure you want to delete this greeting?')) {
-    GreetingUtil.deleteGreeting(id).then(onDelete);
+function handleDeleteGreeting(greeting: GreetingDocument, onDelete?: () => void) {
+  if (confirm(`Are you sure you want to delete '${greeting.greeting}?'`)) {
+    GreetingUtil.deleteGreeting(greeting._id).then(onDelete);
   }
 }
 
@@ -29,14 +28,17 @@ function handleEditGreeting(greeting: GreetingDocument, onEdit?: () => void) {
 
 export default function ManagePage() {
   const [greetings, setGreetings] = React.useState<GreetingDocument[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
   React.useEffect(() => {
     refreshGreetings(setGreetings);
+    setIsLoading(false);
   }, []);
 
   return (
     <div>
       <h1>Manage Greetings</h1>
       <div>
+        {isLoading && <p>Loading greetings...</p>}
         <ul>
           {greetings.map((greet) => (
             <li
@@ -58,7 +60,7 @@ export default function ManagePage() {
               <button
                 style={{ marginLeft: '8px' }}
                 onClick={() =>
-                  handleDeleteGreeting(greet._id, () =>
+                  handleDeleteGreeting(greet, () =>
                     refreshGreetings(setGreetings)
                   )
                 }
