@@ -19,10 +19,10 @@ function handleDeleteGreeting(greeting: GreetingDocument, onDelete?: () => void)
   }
 }
 
-function handleEditGreeting(greeting: GreetingDocument, onEdit?: () => void) {
+function handleEditGreeting(greeting: GreetingDocument, onEdit?: (g: GreetingDocument) => void) {
   const newGreeting = prompt('Edit greeting:', greeting.greeting);
   if (newGreeting && newGreeting !== greeting.greeting) {
-    GreetingUtil.updateGreeting(greeting._id, newGreeting).then(onEdit);
+    GreetingUtil.updateGreeting(greeting._id, newGreeting).then(() => onEdit?.({ ...greeting, greeting: newGreeting }));
   }
 }
 
@@ -30,8 +30,10 @@ export default function ManagePage() {
   const [greetings, setGreetings] = React.useState<GreetingDocument[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   React.useEffect(() => {
-    refreshGreetings(setGreetings);
-    setIsLoading(false);
+    refreshGreetings((data) => {
+      setGreetings(data);
+      setIsLoading(false);
+    });
   }, []);
 
   return (
@@ -50,8 +52,13 @@ export default function ManagePage() {
               <button
                 style={{ marginLeft: '8px' }}
                 onClick={() =>
-                  handleEditGreeting(greet, () =>
-                    refreshGreetings(setGreetings)
+                  handleEditGreeting(greet, (edited) =>
+                    // update greeting list after edit without refresh
+                    setGreetings((prev) =>
+                      prev.map((g) =>
+                        g._id === greet._id ? { ...g, greeting: edited.greeting } : g
+                      )
+                    )
                   )
                 }
               >
@@ -61,7 +68,10 @@ export default function ManagePage() {
                 style={{ marginLeft: '8px' }}
                 onClick={() =>
                   handleDeleteGreeting(greet, () =>
-                    refreshGreetings(setGreetings)
+                    // filter out deleted greeting without full refresh
+                    setGreetings((prev) =>
+                      prev.filter((g) => g._id !== greet._id)
+                    )
                   )
                 }
               >
