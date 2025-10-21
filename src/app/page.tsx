@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import { getGreeting } from '@/app/client-queries';
+import Link from 'next/link';
 
 export default function Home() {
   const [name, setName] = React.useState('');
@@ -47,11 +48,10 @@ export default function Home() {
         <button onClick={handleSubmit}>Say Hello! ✨</button>
       </div>
 
-      {fullGreeting && (
-        <div>
-          <h2>{fullGreeting}</h2>
-        </div>
-      )}
+      <div>
+        {fullGreeting && <h2>{fullGreeting}</h2>}
+        <Link href="/manage">Manage Greetings</Link>
+      </div>
     </div>
   );
 }
