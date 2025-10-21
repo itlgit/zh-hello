@@ -44,9 +44,9 @@ export async function POST(
 
   try {
     if (action === 'update') {
-      await GreetingUtil.updateGreeting(greeting._id, greeting.message);
+      await GreetingUtil.updateGreeting(greeting._id, greeting.greeting);
     } else if (action === 'add') {
-      await GreetingUtil.addGreeting(greeting.message);
+      await GreetingUtil.addGreeting(greeting.greeting);
     } else {
       return NextResponse.json(
         { success: false, message: 'Invalid action' },

@@ -20,14 +20,14 @@ export async function getGreetings(): Promise<GreetingDocument[]> {
 export async function addGreeting(greetingText: string): Promise<GreetingDocument> {
   const db = await connectToDatabase();
   const greetingsCollection = db.collection("greetings");
-  const result = await greetingsCollection.insertOne({ message: greetingText });
-  return { _id: result.insertedId.toString(), message: greetingText };
+  const result = await greetingsCollection.insertOne({ greeting: greetingText });
+  return { _id: result.insertedId.toString(), greeting: greetingText };
 }
 
 export async function updateGreeting(id: string, greetingText: string): Promise<void> {
   const db = await connectToDatabase();
   const greetingsCollection = db.collection("greetings");
-  await greetingsCollection.updateOne({ _id: new ObjectId(id) }, { $set: { message: greetingText } });
+  await greetingsCollection.updateOne({ _id: new ObjectId(id) }, { $set: { greeting: greetingText } });
 }
 
 export async function deleteGreeting(id: string): Promise<void> {
