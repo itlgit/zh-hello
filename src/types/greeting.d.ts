@@ -6,7 +6,7 @@ export type GreetingInput = {
 
 export type GreetingAction = {
   action: 'add' | 'update' | 'delete';
-  greeting: GreetingDocument;
+  message: GreetingDocument;
 };
 
 export interface Greeting extends Document, GreetingInput {}

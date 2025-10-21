@@ -21,8 +21,8 @@ function handleDeleteGreeting(id: string, onDelete?: () => void) {
 }
 
 function handleEditGreeting(greeting: GreetingDocument, onEdit?: () => void) {
-  const newGreeting = prompt('Edit greeting:', greeting.greeting);
-  if (newGreeting && newGreeting !== greeting.greeting) {
+  const newGreeting = prompt('Edit greeting:', greeting.message);
+  if (newGreeting && newGreeting !== greeting.message) {
     GreetingUtil.updateGreeting(greeting._id, newGreeting).then(onEdit);
   }
 }
