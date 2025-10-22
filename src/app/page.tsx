@@ -25,7 +25,7 @@ export default function Home() {
     <div>
       <div>
         <h1>Hello There! 👋</h1>
-        <p>What's your name?</p>
+        <p>What&apos; your name?</p>
       </div>
 
       <div>
