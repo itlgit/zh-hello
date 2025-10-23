@@ -1,5 +1,5 @@
 import { describe, expect, it } from '@jest/globals';
-import type { Greeting } from '@/types/greeting';
+import type { Greeting, GreetingInput } from '@/types/greeting';
 
 const greetingsArray: Greeting[] = [
   { message: 'Hello' },
@@ -20,14 +20,14 @@ jest.mock('../connection', () => {
                   greetingsArray as unknown as T[],
               };
             },
-            insertOne: async (doc: { greeting: string }) => {
+            insertOne: async (doc: GreetingInput) => {
               return {
                 insertedId: 'mocked_id_123',
               };
             },
             updateOne: async (
               filter: { _id: any },
-              update: { $set: { message: string } }
+              update: { $set: GreetingInput }
             ) => {
               // Mock update operation (no-op)
             },
@@ -45,6 +45,9 @@ jest.mock('../connection', () => {
 import * as GreetingUtil from '../greeting';
 
 describe('getGreeting', () => {
+  afterAll(() => {
+    jest.resetAllMocks();
+  });
   it('getGreeting() should return a greeting object with message property', async () => {
     const greeting = await GreetingUtil.getGreeting();
     expect(greetingsArray).toContainEqual(greeting);
