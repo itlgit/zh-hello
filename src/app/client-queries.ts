@@ -1,7 +1,15 @@
-import { GreetingDocument } from '@/types/greeting';
+import { GreetingDocument, GreetingInput } from '@/types/greeting';
 
 export async function getGreeting(): Promise<GreetingDocument> {
-  const response = await fetch('/api/greeting');
+  const hourNow = new Date().getHours();
+  const timeOfDay = hourNow < 12 ? 'morning' : hourNow < 18 ? 'afternoon' : 'evening';
+  const response = await fetch('/api/greeting', {
+    headers: {
+      // send timeOfDay in header to retrieve time-specific greeting
+      'X-Time-Of-Day': timeOfDay,
+      'Content-Type': 'application/json',
+    },
+  });
   return response.json();
 }
 
@@ -10,26 +18,26 @@ export async function getGreetings(): Promise<GreetingDocument[]> {
   return response.json();
 }
 
-export async function addGreeting(message: string): Promise<void> {
+export async function addGreeting(greeting: GreetingInput): Promise<void> {
   await fetch('/api/greetings/add', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ message }),
+    body: JSON.stringify({ ...greeting }),
   });
 }
 
 export async function updateGreeting(
   id: string,
-  message: string
+  greeting: GreetingInput
 ): Promise<void> {
   await fetch('/api/greetings/update', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ _id: id, message }),
+    body: JSON.stringify({ _id: id, ...greeting }),
   });
 }
 
