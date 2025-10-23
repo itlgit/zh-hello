@@ -16,7 +16,7 @@ export default function EditGreetingDialog({
 }: Props) {
   const action = greeting ? 'Edit' : 'Add';
   const [greetText, setGreetText] = React.useState(
-    greeting ? greeting.greeting : ''
+    greeting ? greeting.message : ''
   );
   const [timeOfDay, setTimeOfDay] = React.useState<
     'morning' | 'afternoon' | 'evening' | 'all'
@@ -27,10 +27,10 @@ export default function EditGreetingDialog({
     action === 'Edit'
       ? onUpdate({
           _id: greeting!._id,
-          greeting: greetText,
+          message: greetText,
           timeOfDay,
         })
-      : onAdd({ greeting: greetText, timeOfDay });
+      : onAdd({ message: greetText, timeOfDay });
   }
 
   React.useEffect(() => {

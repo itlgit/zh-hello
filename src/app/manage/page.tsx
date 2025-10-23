@@ -86,7 +86,7 @@ export default function ManagePage() {
             // update greeting list after edit without refresh
             setGreetings((prev) =>
               prev.map((g) =>
-                g._id === greeting._id ? { ...g, greeting: greeting.greeting } : g
+                g._id === greeting._id ? { ...g, message: greeting.message } : g
               )
             );
             setIsDialogOpen(false);
