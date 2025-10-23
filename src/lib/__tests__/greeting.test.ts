@@ -20,6 +20,20 @@ jest.mock('../connection', () => {
                   greetingsArray as unknown as T[],
               };
             },
+            insertOne: async (doc: { greeting: string }) => {
+              return {
+                insertedId: 'mocked_id_123',
+              };
+            },
+            updateOne: async (
+              filter: { _id: any },
+              update: { $set: { message: string } }
+            ) => {
+              // Mock update operation (no-op)
+            },
+            deleteOne: async (filter: { _id: any }) => {
+              // Mock delete operation (no-op)
+            },
           };
         },
       };
@@ -28,11 +42,23 @@ jest.mock('../connection', () => {
 });
 
 // Import the module being tested AFTER the mock
-import { getGreeting } from '../greeting';
+import * as GreetingUtil from '../greeting';
 
 describe('getGreeting', () => {
-  it('should return a greeting object with message property', async () => {
-    const greeting = await getGreeting();
+  it('getGreeting() should return a greeting object with message property', async () => {
+    const greeting = await GreetingUtil.getGreeting();
     expect(greetingsArray).toContainEqual(greeting);
+  });
+
+  it('getGreetings() should return all greetings', async () => {
+    const greetings = await GreetingUtil.getGreetings();
+    expect(greetingsArray).toEqual(greetings);
+  });
+
+  it('addGreeting() should add a new greeting', async () => {
+    const newGreetingText = 'Salutations';
+    const newGreeting = await GreetingUtil.addGreeting(newGreetingText);
+    expect(newGreeting._id).toBe('mocked_id_123');
+    expect(newGreeting.message).toBe(newGreetingText);
   });
 });

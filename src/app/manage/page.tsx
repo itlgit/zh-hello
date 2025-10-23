@@ -20,9 +20,9 @@ function handleDeleteGreeting(greeting: GreetingDocument, onDelete?: () => void)
 }
 
 function handleEditGreeting(greeting: GreetingDocument, onEdit?: (g: GreetingDocument) => void) {
-  const newGreeting = prompt('Edit greeting:', greeting.greeting);
-  if (newGreeting && newGreeting !== greeting.greeting) {
-    GreetingUtil.updateGreeting(greeting._id, newGreeting).then(() => onEdit?.({ ...greeting, greeting: newGreeting }));
+  const newGreeting = prompt('Edit greeting:', greeting.message);
+  if (newGreeting && newGreeting !== greeting.message) {
+    GreetingUtil.updateGreeting(greeting._id, newGreeting).then(() => onEdit?.({ ...greeting, message: newGreeting }));
   }
 }
 
@@ -44,11 +44,11 @@ export default function ManagePage() {
         <ul>
           {greetings.map((greet) => (
             <li
-              // combine _id and greeting to ensure refresh after editing
-              key={greet._id + greet.greeting}
+              // combine _id and message to ensure refresh after editing
+              key={greet._id + greet.message}
               style={{ display: 'flex', alignItems: 'center' }}
             >
-              <input type="text" defaultValue={greet.greeting} readOnly />
+              <input type="text" defaultValue={greet.message} readOnly />
               <button
                 style={{ marginLeft: '8px' }}
                 onClick={() =>
@@ -56,7 +56,7 @@ export default function ManagePage() {
                     // update greeting list after edit without refresh
                     setGreetings((prev) =>
                       prev.map((g) =>
-                        g._id === greet._id ? { ...g, greeting: edited.greeting } : g
+                        g._id === greet._id ? { ...g, message: edited.message } : g
                       )
                     )
                   )
