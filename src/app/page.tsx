@@ -10,7 +10,7 @@ export default function Home() {
   function handleSubmit() {
     if (name) {
       getGreeting().then((greet) => {
-        setFullGreeting(`${greet.greeting}, ${name}!`);
+        setFullGreeting(`${greet.message}, ${name}!`);
       });
     } else {
       ref.current?.focus();
