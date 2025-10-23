@@ -1,5 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
 import type { Greeting, GreetingInput } from '@/types/greeting';
+import { ObjectId } from 'mongodb';
 
 const greetingsArray: Greeting[] = [
   { message: 'Hello' },
@@ -23,15 +24,16 @@ jest.mock('../connection', () => {
             insertOne: async (doc: GreetingInput) => {
               return {
                 insertedId: 'mocked_id_123',
+                ...doc,
               };
             },
             updateOne: async (
-              filter: { _id: any },
+              filter: { _id: ObjectId },
               update: { $set: GreetingInput }
             ) => {
               // Mock update operation (no-op)
             },
-            deleteOne: async (filter: { _id: any }) => {
+            deleteOne: async (filter: { _id: ObjectId }) => {
               // Mock delete operation (no-op)
             },
           };
@@ -60,7 +62,9 @@ describe('getGreeting', () => {
 
   it('addGreeting() should add a new greeting', async () => {
     const newGreetingText = 'Salutations';
-    const newGreeting = await GreetingUtil.addGreeting(newGreetingText);
+    const newGreeting = await GreetingUtil.addGreeting({
+      message: newGreetingText,
+    });
     expect(newGreeting._id).toBe('mocked_id_123');
     expect(newGreeting.message).toBe(newGreetingText);
   });
