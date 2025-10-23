@@ -1,33 +1,27 @@
 'use client';
 import React from 'react';
 import * as GreetingUtil from '@/app/client-queries';
-import { GreetingDocument } from '@/types/greeting';
+import { GreetingDocument, GreetingInput } from '@/types/greeting';
+import EditGreetingDialog from './edit-greeting-dialog';
 
 function refreshGreetings(onRefresh: (greetings: GreetingDocument[]) => void) {
   GreetingUtil.getGreetings().then(onRefresh);
 }
-function handleAddGreeting(onAdd?: () => void) {
-  const newGreeting = prompt('Enter new greeting:');
-  if (newGreeting) {
-    GreetingUtil.addGreeting(newGreeting).then(onAdd);
-  }
-}
 
-function handleDeleteGreeting(greeting: GreetingDocument, onDelete?: () => void) {
+function handleDeleteGreeting(
+  greeting: GreetingDocument,
+  onDelete?: () => void
+) {
   if (confirm(`Are you sure you want to delete '${greeting.greeting}?'`)) {
     GreetingUtil.deleteGreeting(greeting._id).then(onDelete);
   }
 }
 
-function handleEditGreeting(greeting: GreetingDocument, onEdit?: () => void) {
-  const newGreeting = prompt('Edit greeting:', greeting.message);
-  if (newGreeting && newGreeting !== greeting.message) {
-    GreetingUtil.updateGreeting(greeting._id, newGreeting).then(onEdit);
-  }
-}
-
 export default function ManagePage() {
   const [greetings, setGreetings] = React.useState<GreetingDocument[]>([]);
+  const [currentGreeting, setCurrentGreeting] =
+    React.useState<GreetingDocument | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(true);
   React.useEffect(() => {
     refreshGreetings(setGreetings);
@@ -49,11 +43,10 @@ export default function ManagePage() {
               <input type="text" defaultValue={greet.greeting} readOnly />
               <button
                 style={{ marginLeft: '8px' }}
-                onClick={() =>
-                  handleEditGreeting(greet, () =>
-                    refreshGreetings(setGreetings)
-                  )
-                }
+                onClick={() => {
+                  setCurrentGreeting(greet);
+                  setIsDialogOpen(true);
+                }}
               >
                 Edit
               </button>
@@ -72,10 +65,35 @@ export default function ManagePage() {
         </ul>
       </div>
       <button
-        onClick={() => handleAddGreeting(() => refreshGreetings(setGreetings))}
+        onClick={() => {
+          setCurrentGreeting(null);
+          setIsDialogOpen(true);
+        }}
       >
         Add Greeting
       </button>
+
+      {isDialogOpen && (
+        <EditGreetingDialog
+          onClose={() => setIsDialogOpen(false)}
+          onAdd={async (greeting) => {
+            await GreetingUtil.addGreeting(greeting);
+            refreshGreetings(setGreetings);
+            setIsDialogOpen(false);
+          }}
+          onUpdate={async (greeting) => {
+            await GreetingUtil.updateGreeting(greeting._id, greeting);
+            // update greeting list after edit without refresh
+            setGreetings((prev) =>
+              prev.map((g) =>
+                g._id === greeting._id ? { ...g, greeting: greeting.greeting } : g
+              )
+            );
+            setIsDialogOpen(false);
+          }}
+          greeting={currentGreeting || undefined}
+        />
+      )}
     </div>
   );
 }
