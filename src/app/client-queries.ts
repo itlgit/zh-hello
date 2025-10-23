@@ -13,26 +13,26 @@ export async function getGreetings(): Promise<GreetingDocument[]> {
   return response.json();
 }
 
-export async function addGreeting(greeting: string): Promise<void> {
+export async function addGreeting(message: string): Promise<void> {
   await fetch('/api/greetings/add', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ greeting }),
+    body: JSON.stringify({ message }),
   });
 }
 
 export async function updateGreeting(
   id: string,
-  greeting: string
+  message: string
 ): Promise<void> {
   await fetch('/api/greetings/update', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ _id: id, greeting }),
+    body: JSON.stringify({ _id: id, message }),
   });
 }
 
