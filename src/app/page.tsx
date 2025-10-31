@@ -51,6 +51,7 @@ export default function Home() {
       <div>
         {fullGreeting && <h2>{fullGreeting}</h2>}
         <Link href="/manage">Manage Greetings</Link>
+        <Link href="/search">Search Greetings</Link>
       </div>
     </div>
   );
