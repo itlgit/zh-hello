@@ -9,9 +9,14 @@ export default function Home() {
 
   function handleSubmit() {
     if (name) {
-      getGreeting().then((greet) => {
-        setFullGreeting(`${greet.message}, ${name}!`);
-      });
+      getGreeting()
+        .then((greet) => {
+          setFullGreeting(`${greet.message}, ${name}!`);
+        })
+        .catch((error) => {
+          console.error('Error fetching greeting:', error);
+          setFullGreeting(`NO GREETING, ${name}!`);
+        });
     } else {
       ref.current?.focus();
     }

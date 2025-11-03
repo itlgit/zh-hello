@@ -12,7 +12,7 @@ jest.mock('../connection', () => {
   return {
     connectToDatabase: async () => {
       return {
-        collection: (name: string) => {
+        collection: () => {
           return {
             find: <T>() => {
               return {
