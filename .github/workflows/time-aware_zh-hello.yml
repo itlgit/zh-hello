@@ -28,12 +28,14 @@ jobs:
           npm install
           npm run build --if-present
           npm run test --if-present
+          mkdir build
+          tar czf build/app.tar.gz .next
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: .next/**
+          path: build/app.tar.gz
           if-no-files-found: error
           overwrite: true
           retention-days: 1
@@ -51,6 +53,11 @@ jobs:
         with:
           name: node-app
       
+      - name: Extract artifact
+        run: |
+          tar xzf app.tar.gz
+          ls -la .next
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -64,6 +71,6 @@ jobs:
         with:
           app-name: 'zh-hello'
           slot-name: 'Production'
-          package: .
+          package: .next
 
           
