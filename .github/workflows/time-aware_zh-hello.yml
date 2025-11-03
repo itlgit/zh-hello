@@ -29,15 +29,14 @@ jobs:
           npm run build --if-present
           npm run test --if-present
 
-      - name: Debug build
-        run: |
-          ls -la .next/
-
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
           path: .next
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 1
 
   deploy:
     runs-on: ubuntu-latest
