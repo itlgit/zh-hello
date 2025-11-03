@@ -29,6 +29,10 @@ jobs:
           npm run build --if-present
           npm run test --if-present
 
+      - name: Debug build
+        run: |
+          ls -la .next/
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
