@@ -28,8 +28,8 @@ jest.mock('../connection', () => {
               };
             },
             updateOne: async (
-              filter: { _id: ObjectId },
-              update: { $set: GreetingInput }
+              _filter: { _id: ObjectId },
+              _update: { $set: GreetingInput }
             ) => {
               // Mock update operation (no-op)
             },

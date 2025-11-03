@@ -24,13 +24,15 @@ export default function EditGreetingDialog({
   const ref = React.useRef<HTMLInputElement>(null);
 
   function handleSubmit() {
-    action === 'Edit'
-      ? onUpdate({
-          _id: greeting!._id,
-          message: greetText,
-          timeOfDay,
-        })
-      : onAdd({ message: greetText, timeOfDay });
+    if (action === 'Edit') {
+      onUpdate({
+        _id: greeting!._id,
+        message: greetText,
+        timeOfDay,
+      });
+    } else {
+      onAdd({ message: greetText, timeOfDay });
+    }
   }
 
   React.useEffect(() => {

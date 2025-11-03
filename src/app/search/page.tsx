@@ -27,7 +27,7 @@ async function search(term: string, signal: AbortSignal): Promise<Greeting[]> {
 export default function SearchPage() {
   const [searchTerm, setSearchTerm] = React.useState<string>('');
   const [searchResults, setSearchResults] = React.useState<Greeting[]>([]);
-  const [isSearching, setIsSearching] = React.useState<Boolean>(false);
+  const [isSearching, setIsSearching] = React.useState<boolean>(false);
   const [controller, setController] = React.useState<AbortController | null>(
     null
   );

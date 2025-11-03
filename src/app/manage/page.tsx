@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import * as GreetingUtil from '@/app/client-queries';
-import { GreetingDocument, GreetingInput } from '@/types/greeting';
+import { GreetingDocument } from '@/types/greeting';
 import EditGreetingDialog from './edit-greeting-dialog';
 
 function refreshGreetings(onRefresh: (greetings: GreetingDocument[]) => void) {
@@ -12,7 +12,7 @@ function handleDeleteGreeting(
   greeting: GreetingDocument,
   onDelete?: () => void
 ) {
-  if (confirm(`Are you sure you want to delete '${greeting.greeting}?'`)) {
+  if (confirm(`Are you sure you want to delete '${greeting.message}?'`)) {
     GreetingUtil.deleteGreeting(greeting._id).then(onDelete);
   }
 }
@@ -37,10 +37,10 @@ export default function ManagePage() {
           {greetings.map((greet) => (
             <li
               // combine _id and greeting to ensure refresh after editing
-              key={greet._id + greet.greeting}
+              key={greet._id + greet.message}
               style={{ display: 'flex', alignItems: 'center' }}
             >
-              <input type="text" defaultValue={greet.greeting} readOnly />
+              <input type="text" defaultValue={greet.message} readOnly />
               <button
                 style={{ marginLeft: '8px' }}
                 onClick={() => {

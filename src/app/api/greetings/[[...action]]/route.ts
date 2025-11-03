@@ -9,9 +9,13 @@ type RouteParams = {
   };
 };
 
-export async function GET(request: NextRequest, context: RouteParams) {
-  const action = context.params.action?.[0];
-  const id = context.params.action?.[1];
+export async function GET(
+  _request: NextRequest,
+  context: { params: Promise<{ action?: string[] | undefined }> }
+) {
+  const params = await context.params;
+  const action = params.action?.[0];
+  const id = params.action?.[1];
 
   if (action === 'delete' && id) {
     await GreetingUtil.deleteGreeting(id);
@@ -27,7 +31,10 @@ export async function GET(request: NextRequest, context: RouteParams) {
  * @param context
  * @returns
  */
-export async function POST(request: NextRequest, context: RouteParams) {
+export async function POST(
+  request: NextRequest,
+  context: { params: Promise<{ action?: string[] | undefined }> }
+) {
   // only single action supported
   const greeting = (await request.json()) as GreetingDocument;
   const params = await context.params;
